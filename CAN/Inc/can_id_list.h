@@ -6,7 +6,7 @@
 #define INC_CAN_ID_LIST_H_
 
 #define SAFE_STATE_ID 	0
-#define ERROR_MSG_ID	0
+#define ERROR_MSG_ID	1
 
 /*
  * RCD
