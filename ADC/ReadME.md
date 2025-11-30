@@ -6,6 +6,7 @@ Decription:
     
     Main purpose of ADC driver (STM32 peripherial) is to store functions and macros whiich will simplify workflow with ADC. Least but not last purpose is to make all firmwares of Perła, universal. This will help in locating, analyziing and debuging errors in software.
 
+
     NOTE:
     Drivers in being built using registers and low-level features of ADC controller embedded in STM32 cores. Driver is universal for almost all ttype of STM32 cores
 
@@ -28,6 +29,7 @@ Status:
 Author:
     Bartosz Rychlicki
     bartoszrychl@student.agh.edu.pl
+
 
     AGH Eko-Energy
     Software department

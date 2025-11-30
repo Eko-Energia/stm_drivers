@@ -2,7 +2,9 @@
   ******************************************************************************
   * @file    adc_driver.h
   * @author  Bartosz Rychlicki
+
   * @Title   Universal driver for ADC peripheral (Built for F1, F2, F3 and F4 families, but can be implemented for all families)
+
   * @brief   This file contains common defines, flags and macros that are used to prevent high quality of driver's functionalities.
   * 		 All flags, macros and typedefs are built to sense ADC settings and its linked DMA settings
   ******************************************************************************
@@ -192,6 +194,7 @@ typedef enum{
 	#define __ADC_MODE(__HANDLE__)                                                          												\
 											((((__HANDLE__)->Instance->CR2 >> ADC_CR2_CONT_Pos) & 0x1U))
 
+
 #endif
 
 
@@ -209,5 +212,6 @@ ADC_StatusTypeDef        ADC_Config_GetRanksOfChannels(ADC_HandleTypeDef* hadc);
 ADC_StatusTypeDef        ADC_GetRank(ADC_ChannelsTypeDef *cadc, uint8_t channel, uint8_t* rank);
 
 ADC_StatusTypeDef        ADC_Averaging(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, uint8_t channel , uint16_t* retval);
+
 
 #endif /* INC_ADC_DRIVER_H_ */
