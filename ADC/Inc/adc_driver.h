@@ -66,7 +66,7 @@ typedef union{
 
 typedef struct{
 
-	DMA_DualmodeBufferTypeDef 		 ddma;				// dma buffer for dualmode
+	DMA_DualmodeBufferTypeDef 		 ddma;				// dma buffer for dual mode
 
 	DMA_IndependentModeBufferTypeDef idma;				// dma buffer for independent mode
 
@@ -76,11 +76,11 @@ typedef struct{
 
 
 /**
-  * @brief  ADC's channels' ranks definotion
+  * @brief  ADC's channels' ranks definition
   */
 typedef struct{
 
-	uint8_t ranks[ADC_MAX_CHANNELS];						// Channels for all ranks | auto detect
+	uint8_t ranks[ADC_MAX_CHANNELS];					// Channels for all ranks | auto detect
 
 }ADC_ChannelsTypeDef;
 
@@ -295,8 +295,8 @@ typedef enum{
 											((READ_BIT((__HANDLE__)->Instance->CFGR, ADC_CFGR_DMAEN)))
 
 	#define __ADC_RESOLUTION(__HANDLE__)                                                    												\
-											(((((__HANDLE__)->Instance->CFGR >> ADC_CFGR_RES_Pos) & 0b11) == 0b00) ? 4095U : 			\
-											 ((((__HANDLE__)->Instance->CFGR >> ADC_CFGR_RES_Pos) & 0b11) == 0b01) ? 1023U : 			\
+											(((((__HANDLE__)->Instance->CFGR >> ADC_CFGR_RES_Pos) & 0b11) == 0b00) ? 4095U : 			    \
+											 ((((__HANDLE__)->Instance->CFGR >> ADC_CFGR_RES_Pos) & 0b11) == 0b01) ? 1023U : 			    \
 											 ((((__HANDLE__)->Instance->CFGR >> ADC_CFGR_RES_Pos) & 0b11) == 0b10) ? 255U  : 63U )
 
 	#define __ADC_DMA_MODE(__HANDLE__)                                                      												\
@@ -389,8 +389,8 @@ typedef enum{
 											(((((__HANDLE__)->Instance->CR2) >> ADC_CR2_DMA_Pos) & 0x1U))
 
 	#define __ADC_RESOLUTION(__HANDLE__)                                                    												\
-											(((((__HANDLE__)->Instance->CR1 >> ADC_CR1_RES_Pos) & 0b11) == 0b00) ? 4095U : 				\
-											 ((((__HANDLE__)->Instance->CR1 >> ADC_CR1_RES_Pos) & 0b11) == 0b01) ? 1023U : 				\
+											(((((__HANDLE__)->Instance->CR1 >> ADC_CR1_RES_Pos) & 0b11) == 0b00) ? 4095U : 				    \
+											 ((((__HANDLE__)->Instance->CR1 >> ADC_CR1_RES_Pos) & 0b11) == 0b01) ? 1023U : 				    \
 											 ((((__HANDLE__)->Instance->CR1 >> ADC_CR1_RES_Pos) & 0b11) == 0b10) ? 255U  : 63U )
 
 	#define __ADC_DMA_MODE(__HANDLE__)                                                      												\
@@ -473,13 +473,13 @@ typedef enum{
 /* Functions Prototypes --------------------------------------------------------------------  */
 ADC_StatusTypeDef         ADC_Init(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, ADC_ChannelsTypeDef* cadc);
 
-ADC_StatusTypeDef ADC_Init_Multimode(ADC_HandleTypeDef* hadcMaster, ADC_BufferTypeDef* badc);
+ADC_StatusTypeDef         ADC_InitMultimode(ADC_HandleTypeDef* hadcMaster, ADC_BufferTypeDef* badc);
 
 ADC_StatusTypeDef         ADC_ReadChannel(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* cadc, ADC_BufferTypeDef* badc, uint8_t channel, uint16_t*  retval);
 
 __weak ADC_StatusTypeDef  ADC_GetValue(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* cadc, ADC_BufferTypeDef* badc, float max, uint8_t channel, float * retval);
 
-ADC_StatusTypeDef         ADC_Config_GetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* cadc, ADC_BufferTypeDef* badc);
+ADC_StatusTypeDef         ADC_ConfigGetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* cadc, ADC_BufferTypeDef* badc);
 
 ADC_StatusTypeDef         ADC_GetRank(ADC_ChannelsTypeDef *cadc, uint8_t channel, uint8_t* rank);
 
