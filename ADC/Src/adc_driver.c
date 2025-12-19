@@ -88,8 +88,8 @@ ADC_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, ADC
 
 /**
   * @brief ADC Init function, initialize ADC in dual mode | Should be called in init function of slave ADC
-  * @param  hadc    - pointer to ADC Masterhandle
-  * @param  retval  - pointer to variable, whose contains return value
+  * @param  hadc    - pointer to ADC Master handle
+  * @param  badc    - pointer to ADC buffer structure used in dual mode
   * @retval status  - HAL status if init went successfully
   */
 ADC_StatusTypeDef ADC_InitMultimode(ADC_HandleTypeDef* hadcMaster, ADC_BufferTypeDef* badc){
