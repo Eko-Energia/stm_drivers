@@ -18,7 +18,7 @@ Files listing: 1. Inc/adc_driver.h - function prototypes, macros, structs 2. Inc
 Status:
 General:
 Driver build is done. Code tests are done.
-Driver supports functionalities like: - ADC Non-Continous Conversion - ADC Continous Conversion - ADC with DMA Normal mode - ADC with DMA Circual mode - ADC Multimode - Auto detect number of channels used for data conversion
+Driver supports functionalities like: - ADC Non-Continous Conversion - ADC Continous Conversion - ADC with DMA Normal mode - ADC with DMA Circular mode - ADC Multimode - Auto detect number of channels used for data conversion
 
     Detailed:
         1. Inc/adc_driver.h   [DONE]
