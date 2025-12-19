@@ -98,7 +98,7 @@ typedef enum{
 /* Private Macros ------------------------------------------------------------------- */
 #if defined(STM32F1_FAMILY)
 
-	/* Macros Function type for core of F1 family------------------------------------ */
+	/* Function-type macros for core of F1 family------------------------------------ */
 	#define __ADC_IS_DMA_MULTIMODE(__HANDLE__)                                              												\
 											((((((__HANDLE__)->Instance->CR1      >> ADC_CR1_DUALMOD_Pos) & 0xF) == 0U) ? 0U : 1U))
 
