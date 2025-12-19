@@ -36,9 +36,11 @@ static 			uint32_t ADC_RANKS_BITPOS[16] = {
 };
 
 /**
-  * @brief ADC1 Initialization Function, does calibration
-  * @param  hadc   - pointer to ADC handle
-  * @retval status - HAL status
+  * @brief  ADC1 Initialization Function, performs calibration and starts conversions.
+  * @param  hadc  Pointer to ADC handle.
+  * @param  badc  Pointer to ADC buffer configuration/structure.
+  * @param  cadc  Pointer to ADC channels configuration/structure.
+  * @retval ADC_StatusTypeDef  ADC driver status.
   */
 ADC_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, ADC_ChannelsTypeDef* cadc){
 
