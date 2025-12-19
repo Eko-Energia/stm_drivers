@@ -227,12 +227,12 @@ __weak ADC_StatusTypeDef  ADC_GetValue(ADC_HandleTypeDef* hadc, ADC_ChannelsType
 	uint16_t binaryType = 0; 							// init of variable which stores converted value from channel
 	uint32_t adcResolutiion = __ADC_RESOLUTION(hadc);  // reading ADC resolution
 
-	// reading channel's cconverted value
+	// reading channel's converted value
 	if(ADC_ReadChannel(hadc, cadc, badc, channel, &binaryType) != ADC_OK){
 		return ADC_Error;
 	}
 
-	// Basic math here | calculating float value with formula, example: voltage = binary/value/adc_resoltuion * maxVoltage
+	// Basic math here | calculating float value with formula, example: voltage = binary_value/adc_resolution * maxVoltage
 	*retval = max * ((float)(float)binaryType / (float)adcResolutiion);
 
 
@@ -325,7 +325,7 @@ ADC_StatusTypeDef  ADC_ConfigGetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_Cha
 ADC_StatusTypeDef  ADC_GetRank(ADC_ChannelsTypeDef *cadc, uint8_t channel, uint8_t* rank){
 
 	// iterating though all buffer's elements to return given channel's rank
-	for(int i = 0 ; i <= ADC_MAX_CHANNELS; ++i ){
+	for(int i = 0 ; i < ADC_MAX_CHANNELS; ++i ){
 		if(cadc->ranks[i] == channel){
 			*rank = (uint8_t)i;
 

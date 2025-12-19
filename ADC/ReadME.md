@@ -27,7 +27,7 @@ Status:
             - ADC with DMA Normal mode 
             - ADC with DMA Circual mode 
             - ADC Multimode
-            - Auto detect number of channels ussed for data conversion
+            - Auto detect number of channels used for data conversion
 
     Detailed:
         1. Inc/adc_driver.h   [DONE]
