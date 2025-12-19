@@ -197,7 +197,7 @@ ADC_StatusTypeDef ADC_ReadChannel(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* 
 		//overwriting converted value of ADC | otherwise no assign of value will be conducted
 		*(retval) = badc->ADC_Buff[rank];
 
-		// re-launching ADC if its mode is non-continous
+		// re-launching ADC if its mode is non-continuous
 		if(__ADC_MODE(hadc) == 0){
 			if(HAL_ADC_Start(hadc) != HAL_OK){
 				return ADC_Error;
