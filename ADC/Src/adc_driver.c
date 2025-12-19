@@ -76,7 +76,7 @@ ADC_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, ADC
 	}
 
 	// getting ranks config
-	if(ADC_Config_GetRanksOfChannels(hadc, cadc, badc)!= ADC_OK){
+	if(ADC_ConfigGetRanksOfChannels(hadc, cadc, badc)!= ADC_OK){
 		return ADC_Error;
 	}
 
@@ -150,10 +150,18 @@ ADC_StatusTypeDef ADC_ReadChannel(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* 
 		// iterating through all ranks to read value from correct channel's rank in ADC without DMA
 		for(int i  = 0 ; i <= rank ; ++i){
 			 if(__ADC_IS_DMA_MULTIMODE(hadc) == 0){  // single conversion | independent mode
-				 badc->ADC_Buff[rank]             = HAL_ADC_GetValue(hadc);
+
+				 // overwriting value in buffer only if process of reading from given channel is executed
+				 if( i == rank ){
+					 badc->ADC_Buff[rank]             = HAL_ADC_GetValue(hadc);
+				 }
 
 			}else{									 // single conversion | dual mode
-				 badc->ddma.BufferMultiMode[rank] = HAL_ADCEx_MultiModeGetValue(hadc);
+
+				// overwriting value in buffer only if process of reading from given channel is executed
+				if( i == rank ){
+					badc->ddma.BufferMultiMode[rank] = HAL_ADCEx_MultiModeGetValue(hadc);
+				}
 			}
 		}
 
@@ -250,7 +258,7 @@ void               HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
 ADC_StatusTypeDef  ADC_ConfigGetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* cadc, ADC_BufferTypeDef* badc){
 
 	//Reading number of channels to be converted
-	uint32_t numberOfConversions = ((hadc->Instance->SQR1 >> 20) & 0xF) + 1;
+	uint32_t numberOfConversions = ((uint8_t)(hadc->Instance->SQR1 >> 20)) + 1;
 
 
 	// Security check
@@ -269,16 +277,16 @@ ADC_StatusTypeDef  ADC_ConfigGetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_Cha
 
 				switch(ADC_RANKS_REGS[i]){ // reading register to which rank is assigned
 						case SQR_1:
-							cadc->ranks[i] = ((hadc->Instance->SQR1 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR1
+							cadc->ranks[i] = ((hadc->Instance->SQR1 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR1
 							break;
 						case SQR_2:
-							cadc->ranks[i] = ((hadc->Instance->SQR2 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR2
+							cadc->ranks[i] = ((hadc->Instance->SQR2 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR2
 							break;
 						case SQR_3:
-							cadc->ranks[i] = ((hadc->Instance->SQR3 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR3
+							cadc->ranks[i] = ((hadc->Instance->SQR3 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR3
 							break;
 						case SQR_4:
-							cadc->ranks[i] = ((hadc->Instance->SQR4 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR4
+							cadc->ranks[i] = ((hadc->Instance->SQR4 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR4
 							break;
 						default:
 							break;
@@ -289,13 +297,13 @@ ADC_StatusTypeDef  ADC_ConfigGetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_Cha
 
 				switch(ADC_RANKS_REGS[i]){  // reading register to which rank is assigned
 					case SQR_1:
-						cadc->ranks[i] = ((hadc->Instance->SQR1 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR1
+						cadc->ranks[i] = ((hadc->Instance->SQR1 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR1
 						break;
 					case SQR_2:
-						cadc->ranks[i] = ((hadc->Instance->SQR2 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR2
+						cadc->ranks[i] = ((hadc->Instance->SQR2 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR2
 						break;
 					case SQR_3:
-						cadc->ranks[i] = ((hadc->Instance->SQR3 >> ADC_RANKS_BITPOS[i]) & 0xf); // extracting binary value on correct position in SQR3
+						cadc->ranks[i] = ((hadc->Instance->SQR3 >> ADC_RANKS_BITPOS[i]) & 0x1f); // extracting binary value on correct position in SQR3
 						break;
 					default:
 						break;

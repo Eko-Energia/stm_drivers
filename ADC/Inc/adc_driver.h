@@ -50,9 +50,9 @@ static volatile int ADC_CONVERTED_CHANNELS =  4;
   * @brief  DMA buffer typedef for ADCs in dual mode
   */
 typedef union{
-		uint32_t BufferMultiMode[ADC_BUFF_SIZE];
+		uint32_t BufferMultiMode [ADC_BUFF_SIZE];
 		uint16_t BufferADC_Master[ADC_BUFF_SIZE];
-		uint16_t BufferADC_Slave[ADC_BUFF_SIZE];
+		uint16_t BufferADC_Slave [ADC_BUFF_SIZE];
 
 }DMA_DualmodeBufferTypeDef;
 
