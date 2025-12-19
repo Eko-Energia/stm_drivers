@@ -139,7 +139,7 @@ ADC_StatusTypeDef ADC_ReadChannel(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* 
 		return ADC_Error;
 	}
 
-	uint8_t rank  = 0; // init variable, which stores rank of given channel
+	uint8_t rank  = 0; // initialize variable that stores the rank of the given channel
 
 	// reading rank of given channel and writing it to correct variable
 	if(ADC_GetRank(cadc, channel, &rank) != ADC_OK){
