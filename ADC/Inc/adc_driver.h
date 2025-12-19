@@ -36,12 +36,12 @@ extern "C" {
 #define 			SQR_3				    3
 #define				SQR_4					4
 
-#define 			ADC_MAX_CHANNELS       16
-#define 			ADC_AVERAGED_MEASURES  5
-#define 			ADC_BUFF_SIZE 		   80
+#define 			ADC_MAX_CHANNELS       16											// maximum number of ADC's channels
+#define 			ADC_AVERAGED_MEASURES  5											// common number of measures from one channel to be averaged
+#define 			ADC_BUFF_SIZE 		   (ADC_AVERAGED_MEASURES * ADC_MAX_CHANNELS)	// ADC Buffers' Size, includes size of all channels and their number of averaged measures
 
 /* Variables--------------------------------------------------------------------------- */
-static volatile int ADC_CONVERTED_CHANNELS =  4;
+static volatile int ADC_CONVERTED_CHANNELS =  4;	// default value of converted which will be overwrite by program in runtime after auto-detect process
 
 
 
@@ -89,13 +89,7 @@ typedef struct{
   * @brief  ADC Status structures definition
   */
 typedef enum{
-	ADC_Timeout = 0,
-	ADC_Busy,
-	ADC_NotStarted,
-	ADC_DMA_NotEnabled,
-	ADC_DMA_NotInDualMode,
-	ADC_CalibrationFailed,
-	ADC_OK,
+	ADC_OK = 0,
 	ADC_Error
 
 }ADC_StatusTypeDef;

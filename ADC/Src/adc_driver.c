@@ -92,7 +92,7 @@ ADC_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, ADC
   */
 ADC_StatusTypeDef ADC_InitMultimode(ADC_HandleTypeDef* hadcMaster, ADC_BufferTypeDef* badc){
 
-	// checking if correct param was provide
+	// checking if correct parameter was provide
 	if(hadcMaster->Instance != ADC1){
 		return ADC_Error;
 	}
@@ -129,7 +129,7 @@ ADC_StatusTypeDef ADC_ReadChannel(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* 
 
 	// checking ADC status | is launched?
 	if(__ADC_IS_CONV_STARTED(hadc) == 0){ // ADC not started
-		return ADC_NotStarted;
+		return ADC_Error;
 	}
 
 	// security check | is given number of channel correct
@@ -149,18 +149,40 @@ ADC_StatusTypeDef ADC_ReadChannel(ADC_HandleTypeDef* hadc, ADC_ChannelsTypeDef* 
 
 		// iterating through all ranks to read value from correct channel's rank in ADC without DMA
 		for(int i  = 0 ; i <= rank ; ++i){
+
 			 if(__ADC_IS_DMA_MULTIMODE(hadc) == 0){  // single conversion | independent mode
 
-				 // overwriting value in buffer only if process of reading from given channel is executed
-				 if( i == rank ){
-					 badc->ADC_Buff[rank]             = HAL_ADC_GetValue(hadc);
+				 uint16_t value = 0;
+
+				 // getting converted value
+				 value = HAL_ADC_GetValue(hadc);
+
+				 // checking if converted value is valid
+				 if(value > __ADC_RESOLUTION(hadc) || value < 0){
+					 return ADC_Error;
 				 }
 
-			}else{									 // single conversion | dual mode
+				 // overwriting value in buffer only if process of reading from given channel is executed
+				 if(i == rank){
+					 badc->ADC_Buff[rank] = value;
+				 }
+
+			}else{
+				// single conversion | dual mode
+
+				uint32_t value = 0;
+
+				// getting converted value
+				value = HAL_ADCEx_MultiModeGetValue(hadc);
+
+				// checking if converted value is valid
+				if(value > __ADC_RESOLUTION(hadc) || value < 0){
+					 return ADC_Error;
+				}
 
 				// overwriting value in buffer only if process of reading from given channel is executed
-				if( i == rank ){
-					badc->ddma.BufferMultiMode[rank] = HAL_ADCEx_MultiModeGetValue(hadc);
+				if(i == rank){
+					value = HAL_ADCEx_MultiModeGetValue(hadc);
 				}
 			}
 		}
@@ -227,12 +249,12 @@ __weak ADC_StatusTypeDef  ADC_GetValue(ADC_HandleTypeDef* hadc, ADC_ChannelsType
 	uint16_t binaryType = 0; 							// init of variable which stores converted value from channel
 	uint32_t adcResolutiion = __ADC_RESOLUTION(hadc);  // reading ADC resolution
 
-	// reading channel's converted value
+	// reading channel's cconverted value
 	if(ADC_ReadChannel(hadc, cadc, badc, channel, &binaryType) != ADC_OK){
 		return ADC_Error;
 	}
 
-	// Basic math here | calculating float value with formula, example: voltage = binary_value/adc_resolution * maxVoltage
+	// Basic math here | calculating float value with formula, example: voltage = binary/value/adc_resoltuion * maxVoltage
 	*retval = max * ((float)(float)binaryType / (float)adcResolutiion);
 
 
@@ -262,7 +284,7 @@ ADC_StatusTypeDef  ADC_ConfigGetRanksOfChannels(ADC_HandleTypeDef* hadc, ADC_Cha
 
 
 	// Security check
-	if(numberOfConversions > 16 || numberOfConversions < 0){
+	if(numberOfConversions >= ADC_MAX_CHANNELS){
 		return ADC_Error;
 	}
 
@@ -334,7 +356,7 @@ ADC_StatusTypeDef  ADC_GetRank(ADC_ChannelsTypeDef *cadc, uint8_t channel, uint8
 	}
 
 	// Checking if read rank is correct | ADC has maximum 16 ranks
-	if(*rank > 16 || *rank < 0){
+	if(*rank >= ADC_MAX_CHANNELS){
 		return ADC_Error;
 	}
 
@@ -346,7 +368,7 @@ ADC_StatusTypeDef  ADC_GetRank(ADC_ChannelsTypeDef *cadc, uint8_t channel, uint8
   * 	   Macro: ADC_AVERAGED_MEASURES stores information about number of latest conversions to be measured
   * @param  hadc    - pointer to ADC handle
   * @param  badc    - ADC buffer, which stores converted values
-  * @param  retval  - pointer to returning value
+  * @param  retval  - pointer to returning value | overwrite value from 0 to 15
   * @retval status  - ADC status
   */
 ADC_StatusTypeDef ADC_Averaging(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc, ADC_ChannelsTypeDef* cadc, uint8_t channel , uint16_t* retval){
@@ -370,14 +392,14 @@ ADC_StatusTypeDef ADC_Averaging(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc
 		if(hadc->Instance == ADC1){
 
 			// Extracting ADC1 values from dual mode buffer
-			for(int  i = 0 ; i <= ADC_BUFF_SIZE ; ++i){
+			for(int  i = 0 ; i < ADC_BUFF_SIZE ; ++i){
 				badc->ddma.BufferADC_Master[i] = (uint16_t)((badc->ddma.BufferMultiMode[i] >> 16));
 			}
 
 		}else{
 
 			// Extracting ADC2 values from dual mode buffer
-			for(int  i = 0 ; i <= ADC_BUFF_SIZE ; ++i){
+			for(int  i = 0 ; i < ADC_BUFF_SIZE ; ++i){
 				badc->ddma.BufferADC_Slave[i] = (uint16_t)((badc->ddma.BufferMultiMode[i]));
 			}
 
@@ -391,6 +413,11 @@ ADC_StatusTypeDef ADC_Averaging(ADC_HandleTypeDef* hadc, ADC_BufferTypeDef* badc
 
 	for( int i = 0; i < ADC_AVERAGED_MEASURES; ++i){
 		id = (i * ADC_CONVERTED_CHANNELS + rank); // id calculation base on multiplying current iteration by number of conversions to be measures, cause DMA stores continuously conversion though channels until last index of DMA buffer occurs
+
+		// security check | if calculated id is beyond array limits
+		if(id >= ADC_BUFF_SIZE){
+			return ADC_Error;
+		}
 
 		// adding to sum variable next value correlated to current channel
 		sum += ((__ADC_IS_DMA_MULTIMODE(hadc) == 0)
