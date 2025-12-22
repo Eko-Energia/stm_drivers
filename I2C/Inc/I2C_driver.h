@@ -13,7 +13,7 @@
 #define MAX_POST 10
 #define MAX_FRAME_LENGHT 32
 #define CURRENT_PRE(i) (Pre_post_send->table_pre[i])
-#define CURRENT_POST(i) (Pre_post_send->table_post[i])
+#define CURRENT_POST(i) (Pre_post_send->table_post[i - Pre_post_send->size_pre - 1])
 
 
 
@@ -23,8 +23,9 @@ typedef struct{							// Struktura zawierająca dane poszczególnej ramki
 	uint16_t addres;					// Pełny adres tz. adres urządzenia + bit W/R
 	uint8_t data[MAX_FRAME_LENGHT]; 	// I2C nie ma ograniczenia ale bez przesady
 	uint8_t size_data;					// Rozmiar tablicy
-	uint32_t timeout;					//
-	uint8_t delay;						// Opóźnienie np. w AM2320 należy poczekać 2ms na pomiar
+	uint32_t timeout;					// [ms]
+	//uint8_t delay;						// Opóźnienie np. w AM2320 należy poczekać 2ms na pomiar
+
 
 }I2C_frame;
 
@@ -35,7 +36,7 @@ typedef struct{							// Struktura umożliwiająca wysłanie ramki przed ramką 
 	uint8_t size_post;					// Rozmiar table_post
 }I2C_pre_post_frame;
 
-
+HAL_StatusTypeDef I2C_Valid_frame(I2C_frame* Frames);
 HAL_StatusTypeDef I2C_Transmit_message(I2C_frame* Rx_frame, I2C_pre_post_frame* Pre_post_send);
 HAL_StatusTypeDef I2C_Receive_message(I2C_frame* Tx_frame, I2C_pre_post_frame* Pre_post_send);
 
